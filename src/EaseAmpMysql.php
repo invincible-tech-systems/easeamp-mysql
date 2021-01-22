@@ -13,7 +13,7 @@ use \Amp\Mysql;
 *
 * Company: Invincible Tech Systems
 *
-* Version: 0.0.1
+* Version: 1.0.1
 *
 * Description: A very simple and safe PHP library to execute SQL Queries as Prepared Statements on MySQL Database, in an asynchronous & non-blocking way. Methods 
 * are provided to prepare a SQL Statement & it's execution separately as different methods (to facilitate caching of prepared statements) as well as together in a
