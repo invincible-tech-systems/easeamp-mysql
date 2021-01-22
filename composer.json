@@ -1,6 +1,6 @@
 {
     "name": "invincible-tech-systems/easeampmysql",
-    "description": "A very simple and safe PHP library to execute SQL Queries as Prepared Statements on MySQL Database, in an asynchronous & non-blocking way. Methods are provided to prepare a SQL Statement & it's execution separately as different methods (to facilitate caching of prepared statements) as well as together in a single method too, all basing upon Amphp, an event driven concurrent framework in php and its Amphp\Mysql package.",
+    "description": "A very simple and safe PHP library to execute SQL Queries as Prepared Statements on MySQL Database, in an asynchronous & non-blocking way. Methods are provided to prepare a SQL Statement & it's execution separately as different methods (to facilitate caching of prepared statements) as well as together in a single method too, all basing upon Amphp, an event driven concurrent framework in php and its Amphp\\Mysql package.",
 	"keywords": ["php", "sql", "mysql", "Amphp", "Asynchronous", "non-blocking", "database"],
     "homepage": "https://www.invincibletechsystems.com/",
     "type": "library",
