@@ -3,12 +3,18 @@
 require '../vendor/autoload.php';
 
 use InvincibleTechSystems\EaseAmpMysql\EaseAmpMysql;
-
+use \InvincibleTechSystems\EaseAmpMysql\CustomAmphpDnsConfigLoader;
 
 $dbHost = "127.0.0.1";
-$dbUsername = "username";
-$dbPassword = "password";
-$dbName = "test";
+$dbUsername = "db_username";
+$dbPassword = "db_password";
+$dbName = "db_name";
+
+$customAmphpDnsConfigValues = ["208.67.222.222:53", "208.67.220.220:53","8.8.8.8:53","[2001:4860:4860::8888]:53"];
+
+$CustomAmphpDnsConfigLoader = new CustomAmphpDnsConfigLoader($customAmphpDnsConfigValues, 5000, 3);
+
+\Amp\Dns\resolver(new \Amp\Dns\Rfc1035StubResolver(null, $CustomAmphpDnsConfigLoader));
 
 $dbConn = new EaseAmpMysql($dbHost, $dbUsername, $dbPassword, $dbName);
 
@@ -42,7 +48,7 @@ echo "==========================================================================
 $query = "SELECT * FROM `table_name` WHERE `id`=:id";
 
 $values_array = array();
-$values_array = array(':id' => 10);
+$values_array = array(':id' => 100);
 
 //$preparedQuery = $dbConn->prepareQuery($query);
 //$queryResult = $dbConn->runPreparedQuery($preparedQuery, $values_array, "selectSingle");

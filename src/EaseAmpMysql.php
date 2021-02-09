@@ -207,7 +207,7 @@ class EaseAmpMysql {
 					}
 				});
 				
-				if(count($this->dbResultRows) > 0) {
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
 
@@ -229,7 +229,7 @@ class EaseAmpMysql {
 					}
 				});
 				
-				if(count($this->dbResultRows) > 0) {
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
 
@@ -380,8 +380,18 @@ class EaseAmpMysql {
 						$this->dbResultRows = $this->result->getCurrent();
 					}
 				});
-				
-				if(count($this->dbResultRows) > 0) {
+				echo "\ndbresultrows var dump:\n";
+				var_dump($this->dbResultRows);
+				/* if(count($this->dbResultRows) > 0) {
+					
+					return $this->dbResultRows;
+
+				} else {
+					
+					return [];
+					
+				} */
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
 
@@ -404,7 +414,7 @@ class EaseAmpMysql {
 					
 				});
 				
-				if(count($this->dbResultRows) > 0) {
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
 
