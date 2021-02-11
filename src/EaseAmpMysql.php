@@ -6,6 +6,8 @@ namespace InvincibleTechSystems\EaseAmpMysql;
 
 use \Amp\Mysql;
 
+use \InvincibleTechSystems\EaseAmpMysql\Exceptions\EaseAmpMysqlException;
+
 /*
 * Name: EaseAmpMysql
 *
@@ -32,6 +34,7 @@ class EaseAmpMysql {
 	private $dbConnection;
 	private $result;
 	private $lastInsertId;
+	private $getAffectedRowCount;
 	private $dbResultRows;
 	
 
@@ -57,9 +60,10 @@ class EaseAmpMysql {
 			$this->pool = \Amp\Mysql\pool($config);
 			});
 			
-		} catch (\Exception $e) {
+		} catch (EaseAmpMysqlException $e) {
 			
-			throw new \Exception($e->getMessage(), (int)$e->getCode());
+			echo "\n EaseAmpMysqlException - ", $e->getMessage(), (int)$e->getCode();
+			
 		}
 	}
 	
@@ -72,8 +76,10 @@ class EaseAmpMysql {
 			
 			return $this->statement;
 			
-		} catch (\Exception $e) {
-			throw new \Exception($e->getMessage(), (int)$e->getCode());
+		} catch (EaseAmpMysqlException $e) {
+			
+			echo "\n EaseAmpMysqlException - ", $e->getMessage(), (int)$e->getCode();
+			
 		}	
 	}
 	
@@ -239,10 +245,39 @@ class EaseAmpMysql {
 					
 				}
 				
+			} else if ($crudOperationType == "describe") {
+				
+				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = yield $preparedStmt->execute();
+					
+					while (yield $this->result->advance()) {
+						
+						$this->dbResultRows[] = $this->result->getCurrent();
+					}
+					
+				});
+				
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
+					
+					return $this->dbResultRows;
+
+				} else {
+					
+					return [];
+					
+				}
+				
+			} else {
+				
+				throw new EaseAmpMysqlException('Invalid CRUD Operation Type input.');
+				
 			}
 			
-		} catch (\Exception $e) {
-			throw new \Exception('Invalid CRUD Operation Type input.');
+		} catch (EaseAmpMysqlException $e) {
+			
+			echo "\n EaseAmpMysqlException - ", $e->getMessage(), (int)$e->getCode();
+			
 		}
 		
 		//$this->pool->close();
@@ -315,7 +350,7 @@ class EaseAmpMysql {
 				
 			} else if ($crudOperationType == "insertWithUUIDAsPrimaryKey") {
 			
-				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+				/* \Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->lastInsertId = $this->result->getLastInsertId();//NEED to GET STRING Typecasted Last Inserted ID here
@@ -329,7 +364,24 @@ class EaseAmpMysql {
 					
 					return "";
 					
+				} */ 
+				
+				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = yield $preparedStmt->execute($valuesArray);
+					$this->AffectedRowCount = $this->result->getAffectedRowCount();
+					
+				});
+				if($this->AffectedRowCount) {
+					
+					return true;	
+				
+				} else {
+					
+					return "";
+					
 				}
+				
 				
 			} else if ($crudOperationType == "update") {
 				
@@ -380,17 +432,7 @@ class EaseAmpMysql {
 						$this->dbResultRows = $this->result->getCurrent();
 					}
 				});
-				echo "\ndbresultrows var dump:\n";
-				var_dump($this->dbResultRows);
-				/* if(count($this->dbResultRows) > 0) {
-					
-					return $this->dbResultRows;
-
-				} else {
-					
-					return [];
-					
-				} */
+				
 				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
@@ -424,10 +466,39 @@ class EaseAmpMysql {
 					
 				}
 				
+			} else if ($crudOperationType == "describe") {
+				
+				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = yield $preparedStmt->execute();
+					
+					while (yield $this->result->advance()) {
+						
+						$this->dbResultRows[] = $this->result->getCurrent();
+					}
+					
+				});
+				
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
+					
+					return $this->dbResultRows;
+
+				} else {
+					
+					return [];
+					
+				}
+				
+			} else {
+				
+				throw new EaseAmpMysqlException('Invalid CRUD Operation Type input.');
+				
 			}
 			
-		} catch (\Exception $e) {
-			throw new \Exception('Invalid CRUD Operation Type input.');
+		} catch (EaseAmpMysqlException $e) {
+			
+			echo "\n EaseAmpMysqlException - ", $e->getMessage(), (int)$e->getCode();
+			
 		}
 		
 	}
@@ -437,6 +508,73 @@ class EaseAmpMysql {
 		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 	
+	public function getTableRelSinglePrimaryKeyColumnName($query, array $valueArray, $crudOperationType) {
+		
+		$primary_key_column_name = "";
+		
+		if (is_null(trim($table_name))) {
+			
+			return $primary_key_column_name;
+			
+		} else {
+			//echo "All inputs to table details query are Valid\n";
+			$table_details_result = $this->executeQuery($query, $valueArray, $crudOperationType);
+			//$table_details_result = ea_get_table_rel_column_data_types_and_details($table_name);
+			
+			if (count($table_details_result) > 0) {
+		
+				foreach($table_details_result as $column){
+					
+					if ($column["Key"] == "PRI") {
+						
+						$primary_key_column_name = $column["Field"];
+						break;
+						
+					}
+				}
+				
+			}
+			
+			return $primary_key_column_name;	
+			
+		}
+		
+	}
+	
+	public function getTableRelSinglePrimaryKeyColumnDetails($query, array $valueArray, $crudOperationType) {
+		
+		$responseArray = [];
+		
+		if (is_null(trim($table_name))) {
+			
+			return $responseArray;
+			
+		} else {
+			//echo "All inputs to table details query are Valid\n";
+			$table_details_result = $this->executeQuery($query, $valueArray, $crudOperationType);
+			//$table_details_result = ea_get_table_rel_column_data_types_and_details($table_name);
+			
+			if (count($table_details_result) > 0) {
+		
+				foreach($table_details_result as $column){
+					
+					if ($column["Key"] == "PRI") {
+						
+						$responseArray = $column;
+						break;
+						
+					}
+				}
+				
+			}
+			
+			return $responseArray;	
+			
+		}
+		
+	}
+	
+
 	
 	//$this->pool->close();
 }

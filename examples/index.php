@@ -5,6 +5,7 @@ require '../vendor/autoload.php';
 use InvincibleTechSystems\EaseAmpMysql\EaseAmpMysql;
 use \InvincibleTechSystems\EaseAmpMysql\CustomAmphpDnsConfigLoader;
 
+
 $dbHost = "127.0.0.1";
 $dbUsername = "db_username";
 $dbPassword = "db_password";
@@ -28,6 +29,19 @@ $values_array = array(':id' => 10,':name' => 'Raghu');
 //$queryResult = $dbConn->runPreparedQuery($preparedQuery, $values_array, "insertWithIntegerAsPrimaryKey");
 
 //$queryResult = $dbConn->executeQuery($query, $values_array, "insertWithIntegerAsPrimaryKey");
+
+echo "===============================================================================================================================================";
+
+//Insert Query (insertWithUUIDAsPrimaryKey)
+$query = "INSERT INTO `table_name`(`id`, `name`) VALUES (:id,:name)";
+
+$values_array = array();
+$values_array = array(':id' => 'abcd',':name' => 'Raghu');
+
+//$preparedQuery = $dbConn->prepareQuery($query);
+//$queryResult = $dbConn->runPreparedQuery($preparedQuery, $values_array, "insertWithUUIDAsPrimaryKey");
+
+//$queryResult = $dbConn->executeQuery($query, $values_array, "insertWithUUIDAsPrimaryKey");
 
 echo "===============================================================================================================================================";
 
@@ -82,6 +96,18 @@ $values_array = array(':id' => 4);
 
 echo "===============================================================================================================================================";
 
+
+//Describe Query
+$query = "DESCRIBE `table_name`";
+
+$values_array = array();
+
+//$preparedQuery = $dbConn->prepareQuery($query);
+//$queryResult = $dbConn->runPreparedQuery($preparedQuery, $values_array, "describe");
+
+//$queryResult = $dbConn->executeQuery($query, $values_array, "describe");
+
+echo "===============================================================================================================================================";
 
 echo "<pre>";
 print_r($queryResult);
