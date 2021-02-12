@@ -147,7 +147,7 @@ class EaseAmpMysql {
 				
 			} else if ($crudOperationType == "insertWithUUIDAsPrimaryKey") {
 			
-				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+				/* \Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->lastInsertId = $this->result->getLastInsertId();//NEED to GET STRING Typecasted Last Inserted ID here
@@ -160,6 +160,22 @@ class EaseAmpMysql {
 				} else {
 					
 					return "";
+					
+				} */ 
+				
+				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = yield $preparedStmt->execute($valuesArray);
+					$this->AffectedRowCount = $this->result->getAffectedRowCount();
+					
+				});
+				if($this->AffectedRowCount) {
+					
+					return true;	
+				
+				} else {
+					
+					return false;
 					
 				}
 				
@@ -378,7 +394,7 @@ class EaseAmpMysql {
 				
 				} else {
 					
-					return "";
+					return false;
 					
 				}
 				
@@ -508,7 +524,7 @@ class EaseAmpMysql {
 		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 	
-	public function getTableRelSinglePrimaryKeyColumnName($query, array $valueArray, $crudOperationType) {
+	public function getTableRelSinglePrimaryKeyColumnName($table_name) {
 		
 		$primary_key_column_name = "";
 		
@@ -517,21 +533,12 @@ class EaseAmpMysql {
 			return $primary_key_column_name;
 			
 		} else {
-			//echo "All inputs to table details query are Valid\n";
-			$table_details_result = $this->executeQuery($query, $valueArray, $crudOperationType);
-			//$table_details_result = ea_get_table_rel_column_data_types_and_details($table_name);
+						
+			$columnDetails = $this->getTableRelSinglePrimaryKeyColumnDetails($table_name);
 			
-			if (count($table_details_result) > 0) {
-		
-				foreach($table_details_result as $column){
-					
-					if ($column["Key"] == "PRI") {
-						
-						$primary_key_column_name = $column["Field"];
-						break;
-						
-					}
-				}
+			if (count($columnDetails) > 0) {
+				
+				$primary_key_column_name = $columnDetails["Field"];
 				
 			}
 			
@@ -541,7 +548,7 @@ class EaseAmpMysql {
 		
 	}
 	
-	public function getTableRelSinglePrimaryKeyColumnDetails($query, array $valueArray, $crudOperationType) {
+	public function getTableRelSinglePrimaryKeyColumnDetails($table_name) {
 		
 		$responseArray = [];
 		
@@ -550,8 +557,14 @@ class EaseAmpMysql {
 			return $responseArray;
 			
 		} else {
+			
+			//Describe Query
+			$query = "DESCRIBE " . $table_name;
+
+			$valueArray = array();
+			
 			//echo "All inputs to table details query are Valid\n";
-			$table_details_result = $this->executeQuery($query, $valueArray, $crudOperationType);
+			$table_details_result = $this->executeQuery($query, $valueArray, "describe");
 			//$table_details_result = ea_get_table_rel_column_data_types_and_details($table_name);
 			
 			if (count($table_details_result) > 0) {
