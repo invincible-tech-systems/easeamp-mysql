@@ -231,7 +231,16 @@ class EaseAmpMysql {
 				
 				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
-					return $this->dbResultRows;
+					if ($this->checkIfQueryIsDescribed($this->dbResultRows) == "NO") {
+						//echo "\n query is NOT DESCRIBED\n";
+						return $this->dbResultRows;
+						
+					} else {
+						//echo "\n query is DESCRIBED\n";
+						return [];
+						
+					}
+					
 
 				} else {
 					
@@ -251,12 +260,31 @@ class EaseAmpMysql {
 					}
 				});
 				
-				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
+				/* if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
 
 				} else {
 					
+					return [];
+					
+				} */
+				
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
+					
+					if ($this->checkIfQueryIsDescribed($this->dbResultRows) == "NO") {
+						//echo "\n query is NOT DESCRIBED\n";
+						return $this->dbResultRows;
+						
+					} else {
+						//echo "\n query is DESCRIBED1 \n";
+						return [];
+						
+					}
+					
+
+				} else {
+					//echo "\n query is DESCRIBED2 \n";
 					return [];
 					
 				}
@@ -451,7 +479,16 @@ class EaseAmpMysql {
 				
 				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
-					return $this->dbResultRows;
+					if ($this->checkIfQueryIsDescribed($this->dbResultRows) == "NO") {
+						//echo "\n query is NOT DESCRIBED\n";
+						return $this->dbResultRows;
+						
+					} else {
+						//echo "\n query is DESCRIBED\n";
+						return [];
+						
+					}
+					
 
 				} else {
 					
@@ -472,12 +509,31 @@ class EaseAmpMysql {
 					
 				});
 				
-				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
+				/* if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
 					
 					return $this->dbResultRows;
 
 				} else {
 					
+					return [];
+					
+				} */
+				
+				if(($this->dbResultRows != "") && (!is_null($this->dbResultRows)) && (is_array($this->dbResultRows)) && (count($this->dbResultRows) > 0)) {
+					
+					if ($this->checkIfQueryIsDescribed($this->dbResultRows) == "NO") {
+						//echo "\n query is NOT DESCRIBED\n";
+						return $this->dbResultRows;
+						
+					} else {
+						//echo "\n query is DESCRIBED1 \n";
+						return [];
+						
+					}
+					
+
+				} else {
+					//echo "\n query is DESCRIBED2 \n";
 					return [];
 					
 				}
@@ -582,6 +638,37 @@ class EaseAmpMysql {
 			}
 			
 			return $responseArray;	
+			
+		}
+		
+	}
+	
+	public function checkIfQueryIsDescribed($dbQueryResult) {
+		
+		if ((is_array($dbQueryResult)) && (count($dbQueryResult) > 0)) {
+			
+			foreach($dbQueryResult as $column){
+				
+				if ((is_array($column)) && (count($column) == "6") && (array_key_exists('Field', $column)) && (array_key_exists('Type', $column)) && (array_key_exists('Null', $column)) && (array_key_exists('Key', $column)) && (array_key_exists('Default', $column)) && (array_key_exists('Extra', $column))) {
+					
+					$response = "YES";
+					break;
+					
+				} else {
+					
+					$response = "NO";
+					break;
+					
+				}
+			}
+			
+			return $response;	 
+			
+		} else {
+			
+			$response = "NO";
+		
+			return $response;
 			
 		}
 		
