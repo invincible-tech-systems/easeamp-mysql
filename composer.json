@@ -5,11 +5,11 @@
     "homepage": "https://www.invincibletechsystems.com/",
     "type": "library",
 	"require": {
-		"php": "^7.3|^7.4|^8.0",
+		"php": ">=7.2",
         "amphp/mysql": "^2.1.1"
     },
 	"require-dev": {
-		"php": "^7.3|^7.4|^8.0",
+		"php": ">=7.2",
         "amphp/mysql": "^2.1.1"
     },
     "license": "MIT",
