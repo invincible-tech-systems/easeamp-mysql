@@ -15,7 +15,7 @@ use \InvincibleTechSystems\EaseAmpMysql\Exceptions\EaseAmpMysqlException;
 *
 * Company: Invincible Tech Systems
 *
-* Version: 1.0.1
+* Version: 1.0.6
 *
 * Description: A very simple and safe PHP library to execute SQL Queries as Prepared Statements on MySQL Database, in an asynchronous & non-blocking way. Methods 
 * are provided to prepare a SQL Statement & it's execution separately as different methods (to facilitate caching of prepared statements) as well as together in a
@@ -131,6 +131,8 @@ class EaseAmpMysql {
 			
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
+					$this->result = new \stdClass();
+					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->lastInsertId = $this->result->getLastInsertId();
 					
@@ -165,6 +167,8 @@ class EaseAmpMysql {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
+					$this->result = new \stdClass();
+					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->AffectedRowCount = $this->result->getAffectedRowCount();
 					
@@ -182,6 +186,8 @@ class EaseAmpMysql {
 			} else if ($crudOperationType == "update") {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->AffectedRowCount = $this->result->getAffectedRowCount();
@@ -202,6 +208,8 @@ class EaseAmpMysql {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
+					$this->result = new \stdClass();
+					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->AffectedRowCount = $this->result->getAffectedRowCount();
 				});
@@ -220,6 +228,9 @@ class EaseAmpMysql {
 				
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
+					$this->dbResultRows = [];
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					
@@ -251,6 +262,9 @@ class EaseAmpMysql {
 			} else if ($crudOperationType == "selectMultiple") {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
+					$this->dbResultRows = [];
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					
@@ -292,6 +306,9 @@ class EaseAmpMysql {
 			} else if ($crudOperationType == "describe") {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
+					$this->dbResultRows = [];
 					
 					$this->result = yield $preparedStmt->execute();
 					
@@ -378,6 +395,8 @@ class EaseAmpMysql {
 			
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
+					$this->result = new \stdClass();
+					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->lastInsertId = $this->result->getLastInsertId();
 					
@@ -412,6 +431,8 @@ class EaseAmpMysql {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
+					$this->result = new \stdClass();
+					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->AffectedRowCount = $this->result->getAffectedRowCount();
 					
@@ -430,6 +451,8 @@ class EaseAmpMysql {
 			} else if ($crudOperationType == "update") {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->AffectedRowCount = $this->result->getAffectedRowCount();
@@ -450,6 +473,8 @@ class EaseAmpMysql {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
 					
+					$this->result = new \stdClass();
+					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					$this->AffectedRowCount = $this->result->getAffectedRowCount();
 				});
@@ -468,6 +493,9 @@ class EaseAmpMysql {
 				
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
+					$this->dbResultRows = [];
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					
@@ -499,6 +527,9 @@ class EaseAmpMysql {
 			} else if ($crudOperationType == "selectMultiple") {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
+					$this->dbResultRows = [];
 					
 					$this->result = yield $preparedStmt->execute($valuesArray);
 					
@@ -541,6 +572,9 @@ class EaseAmpMysql {
 			} else if ($crudOperationType == "describe") {
 				
 				\Amp\Loop::run(function () use($preparedStmt, &$valuesArray, $crudOperationType) {
+					
+					$this->result = new \stdClass();
+					$this->dbResultRows = [];
 					
 					$this->result = yield $preparedStmt->execute();
 					
